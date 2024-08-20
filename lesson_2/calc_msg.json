@@ -1,0 +1,10 @@
+{
+    "invalid_num": "Error: Number must be a number.",
+    "welcome": "Welcome to calculator.py!",
+    "op_dict" : {
+        "1": "+",
+        "2": "-",
+        "3": "*",
+        "4": "/"
+    }
+}
