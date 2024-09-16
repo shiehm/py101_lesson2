@@ -12,25 +12,32 @@ import random
 VALID_CHOICES = ['rock', 'paper', 'scissors', 'spock', 'lizard']
 SHORT_CHOICES = ['r', 'p', 'sc', 'sp', 'l']
 
+WINNING_COMBOS = {
+    'rock': ['lizard', 'scissors'],
+    'paper': ['rock', 'spock'],
+    'scissors': ['paper', 'lizard'],
+    'spock': ['rock', 'scissors'],
+    'lizard': ['paper', 'spock']
+}
+
+SHORT_CHOICES_MAP = {
+    'r': 'rock',
+    'p': 'paper',
+    'sc': 'scissors',
+    'sp': 'spock',
+    'l': 'lizard'
+}
+
 def prompt(msg):
     print(f'-> {msg}')
 
+def first_wins(user_choice, computer_choice):
+    return computer_choice in WINNING_COMBOS[user_choice]
+
 def display_winner(user_choice, computer_choice):
-    if (
-        (user_choice[0] == 'r' and computer_choice in ['lizard', 'scissors']) or
-        (user_choice[0] == 'p' and computer_choice in ['rock', 'spock']) or
-        (user_choice[0:2] == 'sc' and computer_choice in ['paper', 'lizard']) or
-        (user_choice[0:2] == 'sp' and computer_choice in ['rock', 'scissors']) or
-        (user_choice[0] == 'l' and computer_choice in ['paper', 'spock'])
-        ):
+    if first_wins(user_choice, computer_choice):
         prompt('You win this round!')
-    elif (
-        (user_choice[0] == 'r' and computer_choice in ['paper', 'spock']) or
-        (user_choice[0] == 'p' and computer_choice in ['lizard', 'scissors']) or
-        (user_choice[0:2] == 'sc' and computer_choice in ['rock', 'spock']) or
-        (user_choice[0:2] == 'sp' and computer_choice in ['lizard', 'paper']) or
-        (user_choice[0] == 'l' and computer_choice in ['rock', 'scissors'])
-        ):
+    elif first_wins(computer_choice, user_choice):
         prompt('You lose this round!')
     else:
         prompt('Tie!')
@@ -48,26 +55,17 @@ while (user_won < 3) or (computer_won < 3):
         prompt(f"That was not a valid choice, choose from: {', '.join(VALID_CHOICES)}")
         user_choice = input()
 
+    if user_choice in SHORT_CHOICES:
+        user_choice = SHORT_CHOICES_MAP[user_choice]
+
     computer_choice = random.choice(VALID_CHOICES)
 
     prompt(f'You chose {user_choice}, the computer chose {computer_choice}')
     display_winner(user_choice, computer_choice)
 
-    if (
-        (user_choice[0] == 'r' and computer_choice in ['lizard', 'scissors']) or
-        (user_choice[0] == 'p' and computer_choice in ['rock', 'spock']) or
-        (user_choice[0:2] == 'sc' and computer_choice in ['paper', 'lizard']) or
-        (user_choice[0:2] == 'sp' and computer_choice in ['rock', 'scissors']) or
-        (user_choice[0] == 'l' and computer_choice in ['paper', 'spock'])
-        ):
+    if first_wins(user_choice, computer_choice):
         user_won += 1
-    elif (
-        (user_choice[0] == 'r' and computer_choice in ['paper', 'spock']) or
-        (user_choice[0] == 'p' and computer_choice in ['lizard', 'scissors']) or
-        (user_choice[0:2] == 'sc' and computer_choice in ['rock', 'spock']) or
-        (user_choice[0:2] == 'sp' and computer_choice in ['lizard', 'paper']) or
-        (user_choice[0] == 'l' and computer_choice in ['rock', 'scissors'])
-        ):
+    elif first_wins(computer_choice, user_choice):
         computer_won += 1
 
     prompt(f'User Score: {user_won}/5')
